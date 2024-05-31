@@ -1,6 +1,7 @@
 package booktests.api;
 
 import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
@@ -10,9 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+
+import java.util.List;
+
 
 public class BookApiTests {
-
     private static ClientAndServer mockServer;
     private static final OpenApiValidationFilter validationFilter = new OpenApiValidationFilter("openapi.json");
 
@@ -31,13 +35,18 @@ public class BookApiTests {
     }
 
     @Test
-    public void testAddBookWithRequiredFields() {
-        String bodyWithRequiredFields = "{\"name\":\"1984\",\"author\":\"George Orwell\",\"publishYear\":1949}";
+    public void testAddBooksWithValidData() throws JsonProcessingException {
+        List<Book> books = List.of(
+                new Book("1984", "George Orwell", 1949, "Some comment"),
+                new Book("Animal Farm", "George Orwell", 1945)
+        );
+
+        String jsonBooks = BookSerializer.serializeBooks(books);
 
         given()
                 .contentType(ContentType.JSON)
                 .filter(validationFilter)
-                .body(bodyWithRequiredFields)
+                .body(jsonBooks)
                 .when()
                 .post("/books")
                 .then()
@@ -45,26 +54,33 @@ public class BookApiTests {
     }
 
     @Test
-    public void testAddBookWithAllFields() {
-        String bodyWithAllFields = "{\"name\":\"1984\",\"author\":\"George Orwell\",\"publishYear\":1949,\"comment\":\"Dystopian novel\"}";
+    public void testAddBooksWithMissingRequiredField() throws JsonProcessingException {
+        List<Book> books = List.of(
+                new Book("1984", "George Orwell", 1949, "Some comment"),
+                new Book("Animal Farm", "George Orwell")
+        );
+
+        String jsonBooks = BookSerializer.serializeBooks(books);
 
         given()
                 .contentType(ContentType.JSON)
-                .filter(validationFilter)
-                .body(bodyWithAllFields)
+                .body(jsonBooks)
                 .when()
                 .post("/books")
                 .then()
-                .statusCode(201);
+                .statusCode(400)
+                .body("error", containsString("PublishYear is required"));
     }
 
     @Test
-    public void testAddBookWithoutRequiredNameField() {
-        String bodyWithoutRequiredFields = "{\"author\":\"George Orwell\",\"publishYear\":1949,\"comment\":\"Dystopian novel\"}";
+    public void testAddBooksWithoutJsonList() throws JsonProcessingException {
+        Book book = new Book("1984", "George Orwell", 1949, "Some comment");
+
+        String jsonBooks = BookSerializer.serializeBook(book);
 
         given()
                 .contentType(ContentType.JSON)
-                .body(bodyWithoutRequiredFields)
+                .body(jsonBooks)
                 .when()
                 .post("/books")
                 .then()

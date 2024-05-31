@@ -8,25 +8,25 @@
   "paths": {
     "/books": {
       "post": {
-        "summary": "Add a new book to the library",
-        "operationId": "addBook",
+        "summary": "Add new books to the library",
+        "operationId": "addBooks",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AddBookRequest"
+                "$ref": "#/components/schemas/AddBooksRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Book successfully added",
+            "description": "Books successfully added",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookResponse"
+                  "$ref": "#/components/schemas/BooksResponse"
                 }
               }
             }
@@ -47,56 +47,63 @@
   },
   "components": {
     "schemas": {
-      "AddBookRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the book"
+      "AddBooksRequest": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the book"
+            },
+            "author": {
+              "type": "string",
+              "description": "The author of the book"
+            },
+            "publishYear": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The year the book was published"
+            },
+            "comment": {
+              "type": "string",
+              "description": "Any additional comments about the book"
+            }
           },
-          "author": {
-            "type": "string",
-            "description": "The author of the book"
-          },
-          "publishYear": {
-            "type": "integer",
-            "format": "int32",
-            "description": "The year the book was published"
-          },
-          "comment": {
-            "type": "string",
-            "description": "Any additional comments about the book"
-          }
-        },
-        "required": [
-          "name",
-          "author",
-          "publishYear"
-        ]
+          "required": [
+            "name",
+            "author",
+            "publishYear"
+          ],
+          "additionalProperties": false
+        }
       },
-      "BookResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64",
-            "description": "The unique identifier of the newly added book"
-          },
-          "name": {
-            "type": "string"
-          },
-          "author": {
-            "type": "string"
-          },
-          "publishYear": {
-            "type": "integer"
-          },
-          "comment": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string",
-            "description": "Additional message about the book"
+      "BooksResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int64",
+              "description": "The unique identifier of the newly added book"
+            },
+            "name": {
+              "type": "string"
+            },
+            "author": {
+              "type": "string"
+            },
+            "publishYear": {
+              "type": "integer"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string",
+              "description": "Additional message about the book"
+            }
           }
         }
       },
