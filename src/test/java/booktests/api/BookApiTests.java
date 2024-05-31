@@ -84,6 +84,7 @@ public class BookApiTests {
                 .when()
                 .post("/books")
                 .then()
-                .statusCode(400);
+                .statusCode(400)
+                .body("error", containsString("Expected JSON array but received JSON object."));
     }
 }
