@@ -37,11 +37,11 @@ public class MockServerSetup {
                 request()
                         .withMethod("POST")
                         .withPath("/books")
-                        .withBody("{\"name\":\"1984\",\"author\":\"George Orwell\",\"publishYear\":1949,\"comment\":\"Some comment\"}")
+                        .withBody("[{\"name\":\"1984\",\"author\":\"George Orwell\",\"publishYear\":1949,\"comment\":\"Some comment\"},{\"name\":\"1984\",\"author\":\"George Orwell\",\"publishYear\":1949,\"comment\":\"Some comment\"}]")
         ).respond(
                 response()
-                        .withStatusCode(400)
-                        .withBody("{\"error\":\"Expected JSON array but received JSON object.\"}")
+                        .withStatusCode(409)
+                        .withBody("{\"error\":\"Duplicate entry.\"}")
                         .withHeader(CONTENT_TYPE_HEADER, APPLICATION_JSON)
         );
     }

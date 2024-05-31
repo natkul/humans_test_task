@@ -17,8 +17,4 @@ public class BookSerializer {
     public static String serializeBooks(List<Book> books) throws JsonProcessingException {
         return objectMapper.writeValueAsString(books);
     }
-
-    public static String serializeBook(Book book) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(book);
-    }
 }

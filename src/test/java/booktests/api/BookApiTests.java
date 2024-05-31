@@ -74,18 +74,22 @@ public class BookApiTests {
     }
 
     @Test
-    public void testAddBooksWithoutJsonList() throws JsonProcessingException {
-        Book book = new Book("1984", "George Orwell", 1949, "Some comment");
+    public void testAddDuplicateBooks() throws JsonProcessingException {
+        List<Book> books = List.of(
+                new Book("1984", "George Orwell", 1949, "Some comment"),
+                new Book("1984", "George Orwell", 1949, "Some comment")
+        );
 
-        String jsonBooks = BookSerializer.serializeBook(book);
+        String jsonBooks = BookSerializer.serializeBooks(books);
 
         given()
                 .contentType(ContentType.JSON)
+                .filter(validationFilter)
                 .body(jsonBooks)
                 .when()
                 .post("/books")
                 .then()
-                .statusCode(400)
-                .body("error", containsString("Expected JSON array but received JSON object."));
+                .statusCode(409)
+                .body("error", containsString("Duplicate entry"));
     }
 }
