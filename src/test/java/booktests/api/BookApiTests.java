@@ -50,7 +50,8 @@ public class BookApiTests {
                 .when()
                 .post("/books")
                 .then()
-                .statusCode(201);
+                .statusCode(201)
+                .body("message", containsString("Books successfully added!"));
     }
 
     @Test

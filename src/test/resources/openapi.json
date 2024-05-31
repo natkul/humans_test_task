@@ -79,31 +79,28 @@
         }
       },
       "BooksResponse": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer",
-              "format": "int64",
-              "description": "The unique identifier of the newly added book"
-            },
-            "name": {
-              "type": "string"
-            },
-            "author": {
-              "type": "string"
-            },
-            "publishYear": {
-              "type": "integer"
-            },
-            "comment": {
-              "type": "string"
-            },
-            "message": {
-              "type": "string",
-              "description": "Additional message about the book"
-            }
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The unique identifier of the newly added book"
+          },
+          "name": {
+            "type": "string"
+          },
+          "author": {
+            "type": "string"
+          },
+          "publishYear": {
+            "type": "integer"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "description": "Additional message about the book"
           }
         }
       },

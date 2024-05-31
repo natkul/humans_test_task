@@ -17,7 +17,7 @@ public class MockServerSetup {
         ).respond(
                 response()
                         .withStatusCode(201)
-                        .withBody("[{\"message\": \"Books successfully added!\"}]")
+                        .withBody("{\"message\": \"Books successfully added!\"}")
                         .withHeader(CONTENT_TYPE_HEADER, APPLICATION_JSON)
         );
 
